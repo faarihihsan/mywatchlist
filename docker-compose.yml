@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  mywatchlistdb:
+    container_name: mywatchlistdb
+    image: postgres:12
+    environment:
+      POSTGRES_USER: mywatchlistdb
+      POSTGRES_PASSWORD: mywatchlistdb
+      POSTGRES_DB: mywatchlistdb
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker/mywatchlistdb:/var/lib/
