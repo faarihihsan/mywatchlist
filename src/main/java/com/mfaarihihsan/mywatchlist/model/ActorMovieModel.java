@@ -1,5 +1,6 @@
 package com.mfaarihihsan.mywatchlist.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,10 +14,12 @@ public class ActorMovieModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "movie_id")
     private MovieModel movie;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "actor_id")
     private ActorModel actor;
@@ -32,4 +35,17 @@ public class ActorMovieModel {
 
     @Column(name = "isGuest")
     private boolean isGuest;
+
+    @Override
+    public String toString() {
+        return "ActorMovieModel{" +
+                "id=" + id +
+                ", movie=" + movie +
+                ", actor=" + actor +
+                ", character='" + character + '\'' +
+                ", isMain=" + isMain +
+                ", isSupport=" + isSupport +
+                ", isGuest=" + isGuest +
+                '}';
+    }
 }

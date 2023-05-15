@@ -26,4 +26,8 @@ public class ActorModel {
 
     @OneToMany(mappedBy = "actor", fetch = FetchType.LAZY)
     private List<ActorShowModel> shows;
+
+    public ActorModel(String name) {
+        this.name = name;
+    }
 }

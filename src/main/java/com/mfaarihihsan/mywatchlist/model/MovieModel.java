@@ -18,11 +18,11 @@ public class MovieModel {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "length")
-    private float length;
+    @Column(name = "year")
+    private Integer year;
 
     @Column(name = "rating")
-    private float rating;
+    private Float rating;
 
     @Column(name = "casts")
     @OneToMany(mappedBy = "movie", fetch = FetchType.LAZY)

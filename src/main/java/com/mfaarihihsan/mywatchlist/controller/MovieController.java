@@ -1,60 +1,61 @@
 package com.mfaarihihsan.mywatchlist.controller;
 
-import com.mfaarihihsan.mywatchlist.payload.request.actor.CreateActorRequest;
 import com.mfaarihihsan.mywatchlist.payload.request.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.payload.request.actor.UpdateActorRequest;
-import com.mfaarihihsan.mywatchlist.payload.response.actor.ActorResponse;
-import com.mfaarihihsan.mywatchlist.payload.response.actor.ListActorResponse;
-import com.mfaarihihsan.mywatchlist.service.ActorService;
+import com.mfaarihihsan.mywatchlist.payload.request.movie.CreateMovieRequest;
+import com.mfaarihihsan.mywatchlist.payload.request.movie.UpdateMovieRequest;
+import com.mfaarihihsan.mywatchlist.service.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("actor")
-public class ActorController {
-    private final ActorService actorService;
+@RequestMapping("movie")
+public class MovieController {
+    private final MovieService movieService;
 
     @GetMapping("/list")
-    public ResponseEntity getListActor(
+    public ResponseEntity getListMovie(
             @RequestParam(required = false, defaultValue = "0") Integer page,
-            @RequestParam(required = false, defaultValue = "25") Integer itemPerPage) {
+            @RequestParam(required = false, defaultValue = "25") Integer itemPerPage
+    ) {
         try {
-            ListActorResponse actorModels = actorService.getListActor(new PaginationRequest(page, itemPerPage));
-            return ResponseEntity.ok().body(actorModels);
+            PaginationRequest paginationRequest = new PaginationRequest(page, itemPerPage);
+            return ResponseEntity.ok().body(movieService.getListMovie(paginationRequest));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @GetMapping("/search")
-    public ResponseEntity SearchActor(
+    public ResponseEntity searchMovie(
             @RequestParam String name,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "25") Integer itemPerPage
     ) {
         try {
-            ListActorResponse actorResponse = actorService.searchActor(name, new PaginationRequest(page, itemPerPage));
-            return ResponseEntity.ok().body(actorResponse);
+            PaginationRequest paginationRequest = new PaginationRequest(page, itemPerPage);
+            return ResponseEntity.ok().body(movieService.searchMovie(name, paginationRequest));
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
     @PostMapping("/create")
-    public ResponseEntity createActor(
-            @RequestBody CreateActorRequest createActorRequest
+    public ResponseEntity createMovie(
+            @RequestBody CreateMovieRequest createMovieRequest
             ) {
         try {
-            ActorResponse actorResponse = actorService.createActor(createActorRequest);
-            return ResponseEntity.ok().body(actorResponse);
+            return ResponseEntity.ok().body(movieService.createMovie(createMovieRequest));
         } catch (NoSuchElementException e) {
-          e.printStackTrace();
-          return ResponseEntity.badRequest().body(e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -62,12 +63,11 @@ public class ActorController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity updateActor(
-            @RequestBody UpdateActorRequest updateActorRequest
+    public ResponseEntity updateMovie(
+            @RequestBody UpdateMovieRequest updateMovieRequest
             ) {
         try {
-            ActorResponse actorResponse = actorService.updateActor(updateActorRequest);
-            return ResponseEntity.ok().body(actorResponse);
+            return ResponseEntity.ok().body(movieService.updateMovie(updateMovieRequest));
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -78,9 +78,9 @@ public class ActorController {
     }
 
     @GetMapping("")
-    public ResponseEntity getDetailActor(@RequestParam Integer id) {
+    public ResponseEntity getDetailMovie(@RequestParam Integer id) {
         try {
-            return ResponseEntity.ok().body(actorService.GetDetailActor(id));
+            return ResponseEntity.ok().body(movieService.getDetailMovie(id));
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

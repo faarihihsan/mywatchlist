@@ -18,10 +18,16 @@ public class SeriesModel {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "year")
+    private Integer year;
+
+    @Column(name = "rating")
+    private Float rating;
+
     @Column(name = "episodes")
     private Integer episodes;
 
     @Column(name = "casts")
-    @ManyToMany(mappedBy = "series", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "series", fetch = FetchType.LAZY)
     private List<ActorSeriesModel> casts;
 }
