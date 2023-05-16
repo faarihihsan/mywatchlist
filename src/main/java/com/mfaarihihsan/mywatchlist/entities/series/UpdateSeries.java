@@ -1,7 +1,6 @@
-package com.mfaarihihsan.mywatchlist.entities.movie;
+package com.mfaarihihsan.mywatchlist.entities.series;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,10 +8,9 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class UpdateMovieRequest {
-    @JsonProperty("movieId")
-    private Integer movieId;
+public class UpdateSeries {
+    @JsonProperty("seriesId")
+    private Integer seriesId;
 
     @JsonProperty("title")
     private String title;
@@ -23,6 +21,10 @@ public class UpdateMovieRequest {
     @JsonProperty("rating")
     private Float rating;
 
+    @JsonProperty("episodes")
+    private Integer episodes;
+
     @JsonProperty("casts")
-    private List<UpdateCastMovieRequest> casts;
+    private List<UpdateSeriesCast> casts;
+
 }

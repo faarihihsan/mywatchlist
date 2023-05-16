@@ -5,12 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateSeriesRequest {
+public class Series {
+    @JsonProperty("seriesId")
+    private Integer seriesId;
+
     @JsonProperty("title")
     private String title;
 
@@ -23,6 +24,4 @@ public class CreateSeriesRequest {
     @JsonProperty("episodes")
     private Integer episodes;
 
-    @JsonProperty("casts")
-    private List<CreateCastSeriesRequest> casts;
 }

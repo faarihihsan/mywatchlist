@@ -1,4 +1,4 @@
-package com.mfaarihihsan.mywatchlist.entities;
+package com.mfaarihihsan.mywatchlist.entities.actor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CastRequest {
+public class Actor {
     @JsonProperty("actorId")
     private Integer actorId;
 
-    @JsonProperty("character")
-    private String character;
+    @JsonProperty("name")
+    private String name;
 }

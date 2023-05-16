@@ -1,15 +1,15 @@
 package com.mfaarihihsan.mywatchlist.services;
 
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.CreateSeriesRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.UpdateSeriesRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.DetailSeriesResponse;
-import com.mfaarihihsan.mywatchlist.entities.series.ListSeriesResponse;
+import com.mfaarihihsan.mywatchlist.entities.series.CreateSeries;
+import com.mfaarihihsan.mywatchlist.entities.series.UpdateSeries;
+import com.mfaarihihsan.mywatchlist.entities.series.DetailSeries;
+import com.mfaarihihsan.mywatchlist.entities.series.SeriesList;
 
 public interface SeriesService {
-    public ListSeriesResponse getListSeries(PaginationRequest paginationRequest);
-    public ListSeriesResponse searchSeries(String title, PaginationRequest paginationRequest);
-    public DetailSeriesResponse createSeries(CreateSeriesRequest createSeriesRequest);
-    public DetailSeriesResponse updateSeries(UpdateSeriesRequest updateSeriesRequest);
-    public DetailSeriesResponse getDetailSeries(Integer id);
+    public SeriesList getListSeries(PaginationRequest paginationRequest);
+    public SeriesList searchSeries(String title, PaginationRequest paginationRequest);
+    public DetailSeries createSeries(CreateSeries createSeries);
+    public DetailSeries updateSeries(UpdateSeries updateSeries);
+    public DetailSeries getDetailSeries(Integer id);
 }

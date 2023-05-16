@@ -4,13 +4,13 @@ import com.mfaarihihsan.mywatchlist.models.ActorModel;
 import com.mfaarihihsan.mywatchlist.models.ActorSeriesModel;
 import com.mfaarihihsan.mywatchlist.models.SeriesModel;
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.CreateSeriesRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.UpdateSeriesRequest;
+import com.mfaarihihsan.mywatchlist.entities.series.CreateSeries;
+import com.mfaarihihsan.mywatchlist.entities.series.UpdateSeries;
 import com.mfaarihihsan.mywatchlist.entities.PaginationResponse;
-import com.mfaarihihsan.mywatchlist.entities.series.CastSeriesResponse;
-import com.mfaarihihsan.mywatchlist.entities.series.DetailSeriesResponse;
-import com.mfaarihihsan.mywatchlist.entities.series.ListSeriesResponse;
-import com.mfaarihihsan.mywatchlist.entities.series.SeriesResponse;
+import com.mfaarihihsan.mywatchlist.entities.series.SeriesCast;
+import com.mfaarihihsan.mywatchlist.entities.series.DetailSeries;
+import com.mfaarihihsan.mywatchlist.entities.series.SeriesList;
+import com.mfaarihihsan.mywatchlist.entities.series.Series;
 import com.mfaarihihsan.mywatchlist.repositories.ActorDb;
 import com.mfaarihihsan.mywatchlist.repositories.ActorSeriesDb;
 import com.mfaarihihsan.mywatchlist.repositories.SeriesDb;
@@ -32,23 +32,23 @@ public class SeriesServiceImpl implements SeriesService{
     private final ActorSeriesDb actorSeriesDb;
 
     @Override
-    public ListSeriesResponse getListSeries(PaginationRequest paginationRequest) {
+    public SeriesList getListSeries(PaginationRequest paginationRequest) {
         Pageable pageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getItemPerPage());
         Page<SeriesModel> seriesList = seriesDb.findAll(pageable);
         return getListSeriesResponse(seriesList);
     }
 
     @Override
-    public ListSeriesResponse searchSeries(String title, PaginationRequest paginationRequest) {
+    public SeriesList searchSeries(String title, PaginationRequest paginationRequest) {
         Pageable pageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getItemPerPage());
         Page<SeriesModel> series = seriesDb.findSeriesModelByTitle(title.toLowerCase(), pageable);
 
         return getListSeriesResponse(series);
     }
 
-    private ListSeriesResponse getListSeriesResponse(Page<SeriesModel> seriesModels) {
-        List<SeriesResponse> seriesResponseList = seriesModels.getContent().stream()
-                .map(seriesModel -> new SeriesResponse(
+    private SeriesList getListSeriesResponse(Page<SeriesModel> seriesModels) {
+        List<Series> seriesList = seriesModels.getContent().stream()
+                .map(seriesModel -> new Series(
                             seriesModel.getId(),
                             seriesModel.getTitle(),
                             seriesModel.getYear(),
@@ -63,21 +63,21 @@ public class SeriesServiceImpl implements SeriesService{
                 seriesModels.getTotalElements()
         );
 
-        return new ListSeriesResponse(seriesResponseList, paginationResponse);
+        return new SeriesList(seriesList, paginationResponse);
     }
 
     @Override
-    public DetailSeriesResponse createSeries(CreateSeriesRequest createSeriesRequest) {
+    public DetailSeries createSeries(CreateSeries createSeries) {
         SeriesModel newSeries = new SeriesModel(
                 null,
-                createSeriesRequest.getTitle(),
-                createSeriesRequest.getYear(),
-                createSeriesRequest.getRating(),
-                createSeriesRequest.getEpisodes(),
+                createSeries.getTitle(),
+                createSeries.getYear(),
+                createSeries.getRating(),
+                createSeries.getEpisodes(),
                 null
         );
         SeriesModel savedSeries = seriesDb.save(newSeries);
-        List<ActorSeriesModel> actorSeriesModels = createSeriesRequest.getCasts().stream().map(
+        List<ActorSeriesModel> actorSeriesModels = createSeries.getCasts().stream().map(
                 cast -> {
                     ActorModel targetActor = actorDb.findById(cast.getActorId())
                             .orElseThrow(() -> new NoSuchElementException(
@@ -100,19 +100,19 @@ public class SeriesServiceImpl implements SeriesService{
     }
 
     @Override
-    public DetailSeriesResponse updateSeries(UpdateSeriesRequest updateSeriesRequest) {
-        SeriesModel targetSeries = seriesDb.findById(updateSeriesRequest.getSeriesId())
+    public DetailSeries updateSeries(UpdateSeries updateSeries) {
+        SeriesModel targetSeries = seriesDb.findById(updateSeries.getSeriesId())
                 .orElseThrow(() -> new NoSuchElementException(
-                        String.format("Series with id %s is not found", updateSeriesRequest.getSeriesId())
+                        String.format("Series with id %s is not found", updateSeries.getSeriesId())
                 ));
 
-        targetSeries.setTitle(updateSeriesRequest.getTitle());
-        targetSeries.setYear(updateSeriesRequest.getYear());
-        targetSeries.setRating(updateSeriesRequest.getRating());
-        targetSeries.setEpisodes(updateSeriesRequest.getEpisodes());
+        targetSeries.setTitle(updateSeries.getTitle());
+        targetSeries.setYear(updateSeries.getYear());
+        targetSeries.setRating(updateSeries.getRating());
+        targetSeries.setEpisodes(updateSeries.getEpisodes());
         SeriesModel savedSeries = seriesDb.save(targetSeries);
 
-        List<ActorSeriesModel> targetCastList = updateSeriesRequest.getCasts().stream().map(cast -> {
+        List<ActorSeriesModel> targetCastList = updateSeries.getCasts().stream().map(cast -> {
             ActorModel targetActor = actorDb.findById(cast.getActorId()).orElseThrow(() ->
                     new NoSuchElementException(String.format("Actor with id %s not found", cast.getActorId())));
             ActorSeriesModel targetCast = new ActorSeriesModel();
@@ -136,14 +136,14 @@ public class SeriesServiceImpl implements SeriesService{
         return getDetailSeriesResponse(savedSeries, savedCast);
     }
 
-    private DetailSeriesResponse getDetailSeriesResponse(SeriesModel savedSeries, List<ActorSeriesModel> savedCast) {
-        return new DetailSeriesResponse(
+    private DetailSeries getDetailSeriesResponse(SeriesModel savedSeries, List<ActorSeriesModel> savedCast) {
+        return new DetailSeries(
                 savedSeries.getId(),
                 savedSeries.getTitle(),
                 savedSeries.getYear(),
                 savedSeries.getRating(),
                 savedSeries.getEpisodes(),
-                savedCast.stream().map(cast -> new CastSeriesResponse(
+                savedCast.stream().map(cast -> new SeriesCast(
                         cast.getId(),
                         cast.getActor().getName(),
                         cast.getActor().getId(),
@@ -157,17 +157,17 @@ public class SeriesServiceImpl implements SeriesService{
     }
 
     @Override
-    public DetailSeriesResponse getDetailSeries(Integer id) {
+    public DetailSeries getDetailSeries(Integer id) {
         SeriesModel seriesModel = seriesDb.findById(id).orElseThrow(() -> new NoSuchElementException(String.format("Series with id %s is not found", id)));
 
-        return new DetailSeriesResponse(
+        return new DetailSeries(
                 seriesModel.getId(),
                 seriesModel.getTitle(),
                 seriesModel.getYear(),
                 seriesModel.getRating(),
                 seriesModel.getEpisodes(),
                 seriesModel.getCasts().stream()
-                        .map(cast -> new CastSeriesResponse(
+                        .map(cast -> new SeriesCast(
                                 cast.getId(),
                                 cast.getActor().getName(),
                                 cast.getActor().getId(),

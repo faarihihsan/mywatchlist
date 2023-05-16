@@ -8,13 +8,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CastResponse {
-    @JsonProperty("castId")
-    private Integer castId;
-
-    @JsonProperty("name")
-    private String name;
-
+public class CreateCast {
     @JsonProperty("actorId")
     private Integer actorId;
+
+    @JsonProperty("character")
+    private String character;
 }

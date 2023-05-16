@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class DetailSeriesResponse extends SeriesResponse{
+public class DetailSeries extends Series {
     @JsonProperty("casts")
-    private List<CastSeriesResponse> casts;
+    private List<SeriesCast> casts;
 
-    public DetailSeriesResponse(Integer seriesId, String title, Integer year, Float rating, Integer episodes, List<CastSeriesResponse> casts) {
+    public DetailSeries(Integer seriesId, String title, Integer year, Float rating, Integer episodes, List<SeriesCast> casts) {
         super(seriesId, title, year, rating, episodes);
         this.casts = casts;
     }

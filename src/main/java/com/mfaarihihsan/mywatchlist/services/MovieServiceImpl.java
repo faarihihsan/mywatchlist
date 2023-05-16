@@ -4,13 +4,13 @@ import com.mfaarihihsan.mywatchlist.models.ActorModel;
 import com.mfaarihihsan.mywatchlist.models.ActorMovieModel;
 import com.mfaarihihsan.mywatchlist.models.MovieModel;
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.movie.CreateMovieRequest;
-import com.mfaarihihsan.mywatchlist.entities.movie.UpdateMovieRequest;
+import com.mfaarihihsan.mywatchlist.entities.movie.CreateMovie;
+import com.mfaarihihsan.mywatchlist.entities.movie.UpdateMovie;
 import com.mfaarihihsan.mywatchlist.entities.PaginationResponse;
-import com.mfaarihihsan.mywatchlist.entities.movie.CastMovieResponse;
-import com.mfaarihihsan.mywatchlist.entities.movie.DetailMovieResponse;
-import com.mfaarihihsan.mywatchlist.entities.movie.ListMovieResponse;
-import com.mfaarihihsan.mywatchlist.entities.movie.MovieResponse;
+import com.mfaarihihsan.mywatchlist.entities.movie.MovieCast;
+import com.mfaarihihsan.mywatchlist.entities.movie.DetailMovie;
+import com.mfaarihihsan.mywatchlist.entities.movie.MovieList;
+import com.mfaarihihsan.mywatchlist.entities.movie.Movie;
 import com.mfaarihihsan.mywatchlist.repositories.ActorDb;
 import com.mfaarihihsan.mywatchlist.repositories.ActorMovieDb;
 import com.mfaarihihsan.mywatchlist.repositories.MovieDb;
@@ -32,7 +32,7 @@ public class MovieServiceImpl implements MovieService{
     private final ActorMovieDb actorMovieDb;
 
     @Override
-    public ListMovieResponse getListMovie(PaginationRequest paginationRequest) {
+    public MovieList getListMovie(PaginationRequest paginationRequest) {
         Pageable pageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getItemPerPage());
 
         Page<MovieModel> movies = movieDb.findAll(pageable);
@@ -41,7 +41,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public ListMovieResponse searchMovie(String title, PaginationRequest paginationRequest) {
+    public MovieList searchMovie(String title, PaginationRequest paginationRequest) {
         Pageable pageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getItemPerPage());
 
         Page<MovieModel> movies = movieDb.findMovieModelByTitle(title.toLowerCase(), pageable);
@@ -49,9 +49,9 @@ public class MovieServiceImpl implements MovieService{
         return getListMovieResponse(movies);
     }
 
-    private ListMovieResponse getListMovieResponse(Page<MovieModel> movieModels) {
-        List<MovieResponse> movieResponseList = movieModels.getContent().stream()
-                .map(movieModel -> new MovieResponse(
+    private MovieList getListMovieResponse(Page<MovieModel> movieModels) {
+        List<Movie> movieList = movieModels.getContent().stream()
+                .map(movieModel -> new Movie(
                             movieModel.getId(),
                             movieModel.getTitle(),
                             movieModel.getYear(),
@@ -62,20 +62,20 @@ public class MovieServiceImpl implements MovieService{
                 movieModels.getTotalPages(),
                 movieModels.getTotalElements()
         );
-        return new ListMovieResponse(movieResponseList, paginationResponse);
+        return new MovieList(movieList, paginationResponse);
     }
 
     @Override
-    public DetailMovieResponse createMovie(CreateMovieRequest createMovieRequest) {
+    public DetailMovie createMovie(CreateMovie createMovie) {
         MovieModel newMovie = new MovieModel(
                 null,
-                createMovieRequest.getTitle(),
-                createMovieRequest.getYear(),
-                createMovieRequest.getRating(),
+                createMovie.getTitle(),
+                createMovie.getYear(),
+                createMovie.getRating(),
                 null
         );
         MovieModel savedMovie = movieDb.save(newMovie);
-        List<ActorMovieModel> actorMovieModels = createMovieRequest.getCasts().stream().map(
+        List<ActorMovieModel> actorMovieModels = createMovie.getCasts().stream().map(
                 cast -> {
                     ActorModel targetActor = actorDb.findById(cast.getActorId())
                             .orElseThrow(() -> new NoSuchElementException(
@@ -97,7 +97,7 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public DetailMovieResponse updateMovie(UpdateMovieRequest updateMovieRequest) {
+    public DetailMovie updateMovie(UpdateMovie updateMovieRequest) {
         MovieModel targetMovie = movieDb.findById(updateMovieRequest.getMovieId())
                 .orElseThrow(() -> new NoSuchElementException(
                         String.format("Movie with id %s is not found", updateMovieRequest.getMovieId())
@@ -134,15 +134,15 @@ public class MovieServiceImpl implements MovieService{
         return getDetailMovieResponse(savedMovie, savedCast);
     }
 
-    private DetailMovieResponse getDetailMovieResponse(MovieModel savedMovie, List<ActorMovieModel> savedCast) {
+    private DetailMovie getDetailMovieResponse(MovieModel savedMovie, List<ActorMovieModel> savedCast) {
 
 
-        return new DetailMovieResponse(
+        return new DetailMovie(
                 savedMovie.getId(),
                 savedMovie.getTitle(),
                 savedMovie.getYear(),
                 savedMovie.getRating(),
-                savedCast.stream().map(cast -> new CastMovieResponse(
+                savedCast.stream().map(cast -> new MovieCast(
                         cast.getId(),
                         cast.getActor().getName(),
                         cast.getActor().getId(),
@@ -155,16 +155,16 @@ public class MovieServiceImpl implements MovieService{
     }
 
     @Override
-    public DetailMovieResponse getDetailMovie(Integer id) {
+    public DetailMovie getDetailMovie(Integer id) {
         MovieModel movieModel = movieDb.findById(id).orElseThrow(() -> new NoSuchElementException(String.format("Movie with id %s not found", id)));
 
-        return new DetailMovieResponse(
+        return new DetailMovie(
                 movieModel.getId(),
                 movieModel.getTitle(),
                 movieModel.getYear(),
                 movieModel.getRating(),
                 movieModel.getCasts().stream()
-                        .map(cast -> new CastMovieResponse(
+                        .map(cast -> new MovieCast(
                                 cast.getId(),
                                 cast.getActor().getName(),
                                 cast.getActor().getId(),

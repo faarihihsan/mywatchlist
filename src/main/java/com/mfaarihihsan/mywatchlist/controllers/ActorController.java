@@ -1,10 +1,10 @@
 package com.mfaarihihsan.mywatchlist.controllers;
 
-import com.mfaarihihsan.mywatchlist.entities.actor.CreateActorRequest;
+import com.mfaarihihsan.mywatchlist.entities.actor.CreateActor;
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.actor.UpdateActorRequest;
-import com.mfaarihihsan.mywatchlist.entities.actor.ActorResponse;
-import com.mfaarihihsan.mywatchlist.entities.actor.ListActorResponse;
+import com.mfaarihihsan.mywatchlist.entities.actor.UpdateActor;
+import com.mfaarihihsan.mywatchlist.entities.actor.Actor;
+import com.mfaarihihsan.mywatchlist.entities.actor.ActorList;
 import com.mfaarihihsan.mywatchlist.services.ActorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class ActorController {
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "25") Integer itemPerPage) {
         try {
-            ListActorResponse actorModels = actorService.getListActor(new PaginationRequest(page, itemPerPage));
+            ActorList actorModels = actorService.getListActor(new PaginationRequest(page, itemPerPage));
             return ResponseEntity.ok().body(actorModels);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -38,7 +38,7 @@ public class ActorController {
             @RequestParam(required = false, defaultValue = "25") Integer itemPerPage
     ) {
         try {
-            ListActorResponse actorResponse = actorService.searchActor(name, new PaginationRequest(page, itemPerPage));
+            ActorList actorResponse = actorService.searchActor(name, new PaginationRequest(page, itemPerPage));
             return ResponseEntity.ok().body(actorResponse);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage());
@@ -47,11 +47,11 @@ public class ActorController {
 
     @PostMapping("/create")
     public ResponseEntity createActor(
-            @RequestBody CreateActorRequest createActorRequest
+            @RequestBody CreateActor createActor
             ) {
         try {
-            ActorResponse actorResponse = actorService.createActor(createActorRequest);
-            return ResponseEntity.ok().body(actorResponse);
+            Actor actor = actorService.createActor(createActor);
+            return ResponseEntity.ok().body(actor);
         } catch (NoSuchElementException e) {
           e.printStackTrace();
           return ResponseEntity.badRequest().body(e.getMessage());
@@ -63,11 +63,11 @@ public class ActorController {
 
     @PostMapping("/update")
     public ResponseEntity updateActor(
-            @RequestBody UpdateActorRequest updateActorRequest
+            @RequestBody UpdateActor updateActor
             ) {
         try {
-            ActorResponse actorResponse = actorService.updateActor(updateActorRequest);
-            return ResponseEntity.ok().body(actorResponse);
+            Actor actor = actorService.updateActor(updateActor);
+            return ResponseEntity.ok().body(actor);
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

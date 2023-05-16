@@ -1,8 +1,8 @@
 package com.mfaarihihsan.mywatchlist.controllers;
 
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.movie.CreateMovieRequest;
-import com.mfaarihihsan.mywatchlist.entities.movie.UpdateMovieRequest;
+import com.mfaarihihsan.mywatchlist.entities.movie.CreateMovie;
+import com.mfaarihihsan.mywatchlist.entities.movie.UpdateMovie;
 import com.mfaarihihsan.mywatchlist.services.MovieService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,10 +49,10 @@ public class MovieController {
 
     @PostMapping("/create")
     public ResponseEntity createMovie(
-            @RequestBody CreateMovieRequest createMovieRequest
+            @RequestBody CreateMovie createMovie
             ) {
         try {
-            return ResponseEntity.ok().body(movieService.createMovie(createMovieRequest));
+            return ResponseEntity.ok().body(movieService.createMovie(createMovie));
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,7 +64,7 @@ public class MovieController {
 
     @PostMapping("/update")
     public ResponseEntity updateMovie(
-            @RequestBody UpdateMovieRequest updateMovieRequest
+            @RequestBody UpdateMovie updateMovieRequest
             ) {
         try {
             return ResponseEntity.ok().body(movieService.updateMovie(updateMovieRequest));

@@ -1,8 +1,8 @@
 package com.mfaarihihsan.mywatchlist.controllers;
 
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.CreateSeriesRequest;
-import com.mfaarihihsan.mywatchlist.entities.series.UpdateSeriesRequest;
+import com.mfaarihihsan.mywatchlist.entities.series.CreateSeries;
+import com.mfaarihihsan.mywatchlist.entities.series.UpdateSeries;
 import com.mfaarihihsan.mywatchlist.services.SeriesService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +49,7 @@ public class SeriesController {
 
     @PostMapping("/create")
     public ResponseEntity createSeries(
-            @RequestBody CreateSeriesRequest createSeriesResponse
+            @RequestBody CreateSeries createSeriesResponse
             ) {
         try {
             return ResponseEntity.ok().body(seriesService.createSeries(createSeriesResponse));
@@ -64,10 +64,10 @@ public class SeriesController {
 
     @PostMapping("/update")
     public ResponseEntity updateSeries(
-            @RequestBody UpdateSeriesRequest updateSeriesRequest
+            @RequestBody UpdateSeries updateSeries
             ) {
         try {
-            return ResponseEntity.ok().body(seriesService.updateSeries(updateSeriesRequest));
+            return ResponseEntity.ok().body(seriesService.updateSeries(updateSeries));
         } catch (NoSuchElementException e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

@@ -6,7 +6,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateActorRequest {
+public class CreateActor {
     @JsonProperty("name")
     private String name;
 

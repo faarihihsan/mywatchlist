@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListSeriesResponse {
+public class SeriesList {
     @JsonProperty("series")
-    private List<SeriesResponse> series;
+    private List<Series> series;
 
     @JsonProperty("pagination")
     private PaginationResponse pagination;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MovieResponse {
+public class Movie {
     @JsonProperty("movieId")
     private Integer MovieId;
 

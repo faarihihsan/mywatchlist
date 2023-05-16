@@ -1,16 +1,16 @@
 package com.mfaarihihsan.mywatchlist.services;
 
-import com.mfaarihihsan.mywatchlist.entities.actor.CreateActorRequest;
+import com.mfaarihihsan.mywatchlist.entities.actor.CreateActor;
 import com.mfaarihihsan.mywatchlist.entities.PaginationRequest;
-import com.mfaarihihsan.mywatchlist.entities.actor.UpdateActorRequest;
-import com.mfaarihihsan.mywatchlist.entities.actor.ActorResponse;
-import com.mfaarihihsan.mywatchlist.entities.actor.DetailActorResponse;
-import com.mfaarihihsan.mywatchlist.entities.actor.ListActorResponse;
+import com.mfaarihihsan.mywatchlist.entities.actor.UpdateActor;
+import com.mfaarihihsan.mywatchlist.entities.actor.Actor;
+import com.mfaarihihsan.mywatchlist.entities.actor.DetailActor;
+import com.mfaarihihsan.mywatchlist.entities.actor.ActorList;
 
 public interface ActorService {
-    public DetailActorResponse GetDetailActor(Integer id);
-    public ListActorResponse getListActor(PaginationRequest paginationRequest);
-    public ListActorResponse searchActor(String name, PaginationRequest paginationRequest);
-    public ActorResponse createActor(CreateActorRequest createActorRequest);
-    public ActorResponse updateActor(UpdateActorRequest updateActorRequest);
+    public DetailActor GetDetailActor(Integer id);
+    public ActorList getListActor(PaginationRequest paginationRequest);
+    public ActorList searchActor(String name, PaginationRequest paginationRequest);
+    public Actor createActor(CreateActor createActor);
+    public Actor updateActor(UpdateActor updateActor);
 }

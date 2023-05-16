@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class UpdateActorRequest {
+public class UpdateActor {
     @JsonProperty("id")
     private Integer id;
 

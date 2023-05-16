@@ -1,7 +1,7 @@
 package com.mfaarihihsan.mywatchlist.entities.series;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mfaarihihsan.mywatchlist.entities.CastResponse;
+import com.mfaarihihsan.mywatchlist.entities.Cast;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class CastSeriesResponse extends CastResponse {
+public class SeriesCast extends Cast {
     @JsonProperty("character")
     private String character;
 
@@ -26,7 +26,7 @@ public class CastSeriesResponse extends CastResponse {
     private List<Integer> appearOnEpisodes;
 
 
-    public CastSeriesResponse(Integer id, String name, Integer actorId, String character, boolean isMain, boolean isSupport, boolean isGuest, List<Integer> appearOnEpisodes) {
+    public SeriesCast(Integer id, String name, Integer actorId, String character, boolean isMain, boolean isSupport, boolean isGuest, List<Integer> appearOnEpisodes) {
         super(id, name, actorId);
         this.character = character;
         this.isMain = isMain;

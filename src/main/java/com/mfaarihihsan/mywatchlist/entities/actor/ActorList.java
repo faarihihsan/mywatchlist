@@ -1,4 +1,4 @@
-package com.mfaarihihsan.mywatchlist.entities.movie;
+package com.mfaarihihsan.mywatchlist.entities.actor;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mfaarihihsan.mywatchlist.entities.PaginationResponse;
@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ListMovieResponse {
-    @JsonProperty("movies")
-    private List<MovieResponse> movies;
+public class ActorList {
+    @JsonProperty("actors")
+    private List<Actor> actors;
 
     @JsonProperty("pagination")
     private PaginationResponse pagination;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActorSeriesResponse {
+public class SeriesActor {
     @JsonProperty("actorId")
     private Integer actorId;
 

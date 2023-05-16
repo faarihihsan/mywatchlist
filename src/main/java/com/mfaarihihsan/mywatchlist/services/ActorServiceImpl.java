@@ -20,16 +20,15 @@ public class ActorServiceImpl implements ActorService {
     private final ActorDb actorDb;
 
     @Override
-    public ListActorResponse getListActor(PaginationRequest paginationRequest) {
+    public ActorList getListActor(PaginationRequest paginationRequest) {
         Pageable pageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getItemPerPage());
-
         Page<ActorModel> actors = actorDb.findAll(pageable);
 
         return getListActorResponse(actors);
     }
 
     @Override
-    public ListActorResponse searchActor(String name, PaginationRequest paginationRequest) {
+    public ActorList searchActor(String name, PaginationRequest paginationRequest) {
         Pageable pageable = PageRequest.of(paginationRequest.getPage(), paginationRequest.getItemPerPage());
 
         Page<ActorModel> actorsDb = actorDb.findActorModelsByName(name, pageable);
@@ -37,46 +36,46 @@ public class ActorServiceImpl implements ActorService {
         return getListActorResponse(actorsDb);
     }
 
-    private ListActorResponse getListActorResponse(Page<ActorModel> actorsDb) {
-        List<ActorResponse> actorResponseList = actorsDb.getContent().stream().map(actorModel -> new ActorResponse(actorModel.getId(), actorModel.getName())).toList();
+    private ActorList getListActorResponse(Page<ActorModel> actorsDb) {
+        List<Actor> actorList = actorsDb.getContent().stream().map(actorModel -> new Actor(actorModel.getId(), actorModel.getName())).toList();
         PaginationResponse paginationResponse = new PaginationResponse(
                 actorsDb.getNumber(),
                 actorsDb.getSize(),
                 actorsDb.getTotalPages(),
                 actorsDb.getTotalElements()
         );
-        ListActorResponse res = new ListActorResponse(actorResponseList, paginationResponse);
+        ActorList res = new ActorList(actorList, paginationResponse);
 
         return res;
     }
 
     @Override
-    public ActorResponse createActor(CreateActorRequest createActorRequest) {
-        ActorModel newActor = new ActorModel(createActorRequest.getName());
+    public Actor createActor(CreateActor createActor) {
+        ActorModel newActor = new ActorModel(createActor.getName());
         ActorModel savedActor = actorDb.save(newActor);
-        return new ActorResponse(savedActor.getId(), savedActor.getName());
+        return new Actor(savedActor.getId(), savedActor.getName());
     }
 
     @Override
-    public ActorResponse updateActor(UpdateActorRequest updateActorRequest) {
-        ActorModel targetActor = actorDb.findById(updateActorRequest.getId())
+    public Actor updateActor(UpdateActor updateActor) {
+        ActorModel targetActor = actorDb.findById(updateActor.getId())
                 .orElseThrow(() -> new NoSuchElementException(
-                        String.format("Actor with id %s is not found", updateActorRequest.getId())
+                        String.format("Actor with id %s is not found", updateActor.getId())
                 ));
-        targetActor.setName(updateActorRequest.getName());
+        targetActor.setName(updateActor.getName());
         ActorModel savedActor = actorDb.save(targetActor);
-        return new ActorResponse(savedActor.getId(), savedActor.getName());
+        return new Actor(savedActor.getId(), savedActor.getName());
     }
 
     @Override
-    public DetailActorResponse GetDetailActor(Integer id) {
+    public DetailActor GetDetailActor(Integer id) {
         ActorModel actorModel = actorDb.findById(id).orElseThrow(() -> new NoSuchElementException(String.format("Actor with id %s is not found", id)));
 
-        return new DetailActorResponse(
+        return new DetailActor(
                 actorModel.getId(),
                 actorModel.getName(),
                 actorModel.getMovies().stream()
-                        .map(movie -> new ActorMovieResponse(
+                        .map(movie -> new MovieActor(
                             movie.getId(),
                             movie.getMovie().getTitle(),
                             movie.getMovie().getId(),
@@ -87,7 +86,7 @@ public class ActorServiceImpl implements ActorService {
                             movie.isGuest()
                     )).toList(),
                 actorModel.getSeries().stream()
-                        .map(series -> new ActorSeriesResponse(
+                        .map(series -> new SeriesActor(
                                 series.getId(),
                                 series.getSeries().getTitle(),
                                 series.getSeries().getId(),

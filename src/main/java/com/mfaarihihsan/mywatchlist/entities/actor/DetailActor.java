@@ -4,14 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-public class DetailActorResponse extends ActorResponse{
+public class DetailActor extends Actor {
     @JsonProperty("movies")
-    private List<ActorMovieResponse> movieResponseList;
+    private List<MovieActor> movieResponseList;
 
     @JsonProperty("series")
-    private List<ActorSeriesResponse> seriesResponseList;
+    private List<SeriesActor> seriesResponseList;
 
-    public DetailActorResponse(Integer actorId, String name, List<ActorMovieResponse> movieResponseList, List<ActorSeriesResponse> seriesResponseList) {
+    public DetailActor(Integer actorId, String name, List<MovieActor> movieResponseList, List<SeriesActor> seriesResponseList) {
         super(actorId, name);
         this.movieResponseList = movieResponseList;
         this.seriesResponseList = seriesResponseList;
